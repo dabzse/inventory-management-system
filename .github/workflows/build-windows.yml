@@ -23,7 +23,7 @@ jobs:
         run: python -m pip install -e ".[dev]"
 
       - name: Run checks
-        run: .\scripts\check.sh
+        run: bash ./scripts/check.sh
         shell: bash
         env:
           QT_QPA_PLATFORM: offscreen
