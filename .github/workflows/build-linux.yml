@@ -1,0 +1,37 @@
+name: Build Linux executable
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Install dependencies
+        run: python -m pip install -e ".[dev]"
+
+      - name: Run checks
+        run: ./scripts/check.sh
+        env:
+          QT_QPA_PLATFORM: offscreen
+
+      - name: Build executable
+        run: python -m PyInstaller --clean --noconfirm ims.spec
+
+      - name: Upload Linux executable
+        uses: actions/upload-artifact@v4
+        with:
+          name: ims-linux
+          path: dist/ims
